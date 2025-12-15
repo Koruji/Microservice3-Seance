@@ -62,3 +62,19 @@ export const modifyRoom = async (req, res) => {
         res.status(500).json({message: 'Failure to modify Room object', error: error.message});
     }
 }
+
+export const deleteRoom = async (req, res) => {
+    try {
+        const room = await Room.findByPk(req.params.id);
+
+        if(!room) {
+            return res.status(404).json({message: 'Room dont exist', error: error.message});
+        }
+
+        await room.destroy();
+
+        res.status(200).json({message: 'Success delete'});
+    } catch(error) {
+        res.status(500).json({message: 'Failure to delete Room object', error: error.message});
+    }
+}
