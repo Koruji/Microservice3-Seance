@@ -15,6 +15,19 @@ export const getAllShow = async (req, res) => {
     }
 }
 
+export const getShowById = async (req,res) => {
+    try {
+        const show = await Show.findByPk(req.params.id);
+        if(!show) {
+            res.status(404).json({message: 'Show dont exist', error: error.message});
+        }
+
+        res.status(200).json(show);
+    } catch(error) {
+        res.status(500).json({message: 'Server error', error: error.message});
+    }
+}
+
 export const createShow = async (req,res) => {
     try {
         const {
