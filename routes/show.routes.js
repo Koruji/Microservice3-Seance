@@ -4,7 +4,8 @@ import {
     getShowById,
     getShowByRoom,
     createShow, 
-    modifyShow
+    modifyShow, 
+    deleteShow
 } from '../public/controllers/show.controller.js';
 
 const router = express.Router();
@@ -14,6 +15,6 @@ router.get('/:id', getShowById);
 router.get('/room/:id_room', getShowByRoom);
 router.post('/', createShow);
 router.put('/:id', modifyShow);
-// router.delete('/:id', deleteShow);
+router.delete('/:id', deleteShow);
 
 export default router;

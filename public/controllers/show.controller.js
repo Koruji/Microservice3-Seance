@@ -19,7 +19,7 @@ export const getShowById = async (req,res) => {
     try {
         const show = await Show.findByPk(req.params.id);
         if(!show) {
-            res.status(404).json({message: 'Show dont exist', error: error.message});
+            return res.status(404).json({message: 'Show dont exist'});
         }
 
         res.status(200).json(show);
@@ -49,13 +49,13 @@ export const createShow = async (req,res) => {
         } = req.body;
 
         if(!date || !id_movie || !id_room) {
-            res.status(400).json({message: 'Attribute missing to create Show', error: error.message});
+            return res.status(400).json({message: 'Attribute missing to create Show'});
         }
 
         const room = await Room.findByPk(id_room);
 
         if(!room) {
-            res.status(404).json({message: 'Room dont find', error: error.message});
+            return res.status(404).json({message: 'Room dont find'});
         }
 
         const newShow = await Show.create({
@@ -76,7 +76,7 @@ export const modifyShow = async (req,res) => {
         const show = await Show.findByPk(req.params.id);
 
         if(!show) {
-            return res.status(404).json({message: 'Room dont exist', error: error.message});
+            return res.status(404).json({message: 'Room dont exist'});
         }
         
         if (req.body.id_room) {
@@ -93,3 +93,19 @@ export const modifyShow = async (req,res) => {
         res.status(500).json({message: 'Failure to modify Show object', error: error.message});
     }
 }
+
+export const deleteShow = async (req, res) => {
+    try {
+        const show = await Show.findByPk(req.params.id);
+        
+        if (!show) {
+            return res.status(404).json({ message: 'Show dont find' });
+        }
+
+        await show.destroy();
+
+        res.status(200).json({ message: 'Sucess delete' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failure to delete Show', error: error.message });
+    }
+};
