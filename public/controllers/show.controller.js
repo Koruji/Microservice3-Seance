@@ -70,3 +70,26 @@ export const createShow = async (req,res) => {
         res.status(500).json({message: 'Failure to create Show object', error: error.message});
     }
 }
+
+export const modifyShow = async (req,res) => {
+    try {
+        const show = await Show.findByPk(req.params.id);
+
+        if(!show) {
+            return res.status(404).json({message: 'Room dont exist', error: error.message});
+        }
+        
+        if (req.body.id_room) {
+            const room = await Room.findByPk(req.body.id_room);
+            if (!room) {
+                return res.status(404).json({ message: 'Room dont find' });
+            }
+        }
+        
+        await show.update(req.body);
+
+        res.status(200).json(show);
+    } catch(error) {
+        res.status(500).json({message: 'Failure to modify Show object', error: error.message});
+    }
+}
