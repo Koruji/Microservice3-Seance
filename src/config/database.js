@@ -1,15 +1,15 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import { Sequelize } from 'sequelize';
+import { Sequelize } from "sequelize";
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  process.env.DB_NAME || "microservice",
+  process.env.DB_USER || "app",
+  process.env.DB_PASSWORD || "app",
   {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: 'mysql',
+    host: process.env.DB_HOST || "db", // <-- doit correspondre au service docker
+    port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
+    dialect: "mysql",
     logging: false,
   }
 );
