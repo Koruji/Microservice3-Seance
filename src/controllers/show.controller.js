@@ -1,7 +1,8 @@
-import Show from '../model/show.js';
-import Room from '../model/room.js';
+import Show from '../models/show.js';
+import Room from '../models/room.js';
+import AppError from '../utils/AppError.js';
 
-export const getAllShow = async (req, res) => {
+export const getAllShow = async (req, res, next) => {
     try {
         const shows = await Show.findAll({
             include: [{
@@ -11,24 +12,24 @@ export const getAllShow = async (req, res) => {
         });
         res.status(200).json(shows);
     } catch(error) {
-        res.status(500).json({message: 'Server error', error: error.message});
+        next(new AppError('Server error', 500));
     }
 }
 
-export const getShowById = async (req,res) => {
+export const getShowById = async (req, res, next) => {
     try {
         const show = await Show.findByPk(req.params.id);
         if(!show) {
-            return res.status(404).json({message: 'Show dont exist'});
+            next(new AppError('Show dont exist', 404));
         }
 
         res.status(200).json(show);
     } catch(error) {
-        res.status(500).json({message: 'Server error', error: error.message});
+        next(new AppError('Server error', 500));
     }
 }
 
-export const getShowByRoom = async (req,res) => {
+export const getShowByRoom = async (req, res, next) => {
     try {
         const shows = await Show.findAll({
             where: {id_room: req.params.id_room}
@@ -36,11 +37,11 @@ export const getShowByRoom = async (req,res) => {
 
         res.status(200).json(shows);
     } catch(error) {
-        res.status(500).json({message: 'Server error', error: error.message});
+        next(new AppError('Server error', 500));
     }
 }
 
-export const createShow = async (req,res) => {
+export const createShow = async (req, res, next) => {
     try {
         const {
             date,
@@ -49,13 +50,13 @@ export const createShow = async (req,res) => {
         } = req.body;
 
         if(!date || !id_movie || !id_room) {
-            return res.status(400).json({message: 'Attribute missing to create Show'});
+            next(new AppError('Attribute missing to create Show', 400));
         }
 
         const room = await Room.findByPk(id_room);
 
         if(!room) {
-            return res.status(404).json({message: 'Room dont find'});
+            next(new AppError('Room dont exist', 404));
         }
 
         const newShow = await Show.create({
@@ -67,22 +68,22 @@ export const createShow = async (req,res) => {
         res.status(201).json(newShow);
 
     } catch(error) {
-        res.status(500).json({message: 'Failure to create Show object', error: error.message});
+        next(new AppError('Failure to create Show object', 500));
     }
 }
 
-export const modifyShow = async (req,res) => {
+export const modifyShow = async (req, res, next) => {
     try {
         const show = await Show.findByPk(req.params.id);
 
         if(!show) {
-            return res.status(404).json({message: 'Room dont exist'});
+            next(new AppError('Show dont exist', 404));
         }
         
         if (req.body.id_room) {
             const room = await Room.findByPk(req.body.id_room);
             if (!room) {
-                return res.status(404).json({ message: 'Room dont find' });
+                next(new AppError('Room dont find', 404));
             }
         }
         
@@ -90,22 +91,22 @@ export const modifyShow = async (req,res) => {
 
         res.status(200).json(show);
     } catch(error) {
-        res.status(500).json({message: 'Failure to modify Show object', error: error.message});
+        next(new AppError('Failure to modify Show object', 500));
     }
 }
 
-export const deleteShow = async (req, res) => {
+export const deleteShow = async (req, res, next) => {
     try {
         const show = await Show.findByPk(req.params.id);
         
         if (!show) {
-            return res.status(404).json({ message: 'Show dont find' });
+            next(new AppError('Show dont find', 404));
         }
 
         await show.destroy();
 
         res.status(200).json({ message: 'Sucess delete' });
     } catch (error) {
-        res.status(500).json({ message: 'Failure to delete Show', error: error.message });
+        next(new AppError('Failure to delete Show', 500));
     }
 };
