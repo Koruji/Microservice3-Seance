@@ -7,7 +7,7 @@ const sequelize = new Sequelize(
   process.env.DB_USER || "app",
   process.env.DB_PASSWORD || "app",
   {
-    host: process.env.DB_HOST || "db", // <-- doit correspondre au service docker
+    host: process.env.DB_HOST || "db",
     port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
     dialect: "mysql",
     logging: false,

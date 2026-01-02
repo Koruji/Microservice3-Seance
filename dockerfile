@@ -12,6 +12,6 @@ COPY . .
 EXPOSE 3000
 
 # Script pour attendre MySQL avant de lancer l'API
-CMD ["sh", "-c", "until nc -z db 3306; do echo '⏳ Waiting for MySQL...'; sleep 2; done; echo '✅ MySQL is up'; npm run dev"]
+CMD ["sh", "-c", "until nc -z db 3306; do echo '⏳ Waiting for MySQL...'; sleep 2; done; echo 'MySQL is up'; npm run dev"]
 
 
